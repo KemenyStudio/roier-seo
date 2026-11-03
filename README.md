@@ -176,8 +176,7 @@ node scripts/audit-api.js https://example.com --key=YOUR_API_KEY
     "performance": 85,
     "accessibility": 92,
     "bestPractices": 100,
-    "seo": 88,
-    "pwa": 30
+    "seo": 88
   },
   "webVitals": {
     "FCP": 1200,
