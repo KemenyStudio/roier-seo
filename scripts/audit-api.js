@@ -38,7 +38,7 @@ const colors = {
 async function runAudit(url, apiKey = null) {
   console.error(`${colors.cyan}🔍 Running PageSpeed Insights audit for: ${url}${colors.reset}\n`);
 
-  const categories = ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'];
+  const categories = ['performance', 'accessibility', 'best-practices', 'seo'];
   const params = new URLSearchParams({
     url,
     strategy: 'mobile',
@@ -69,8 +69,7 @@ async function runAudit(url, apiKey = null) {
       performance: Math.round((lhr.categories.performance?.score || 0) * 100),
       accessibility: Math.round((lhr.categories.accessibility?.score || 0) * 100),
       bestPractices: Math.round((lhr.categories['best-practices']?.score || 0) * 100),
-      seo: Math.round((lhr.categories.seo?.score || 0) * 100),
-      pwa: Math.round((lhr.categories.pwa?.score || 0) * 100)
+      seo: Math.round((lhr.categories.seo?.score || 0) * 100)
     };
 
     // Extract failed audits
