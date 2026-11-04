@@ -18,6 +18,9 @@ import lighthouse from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
 import fs from 'fs';
 import path from 'path';
+import { assertSupportedNode, isInsightAudit } from './runtime.js';
+
+assertSupportedNode();
 
 // ANSI colors for terminal output
 const colors = {
@@ -84,8 +87,9 @@ async function runAudit(url, options = {}) {
       minor: []
     };
 
-    // Process all audits
+    // Process failed category audits. Insight diagnostics are not fixes.
     for (const [auditId, audit] of Object.entries(lhr.audits)) {
+      if (isInsightAudit(auditId, lhr.categories)) continue;
       if (audit.score !== null && audit.score < 1) {
         const issue = {
           id: auditId,

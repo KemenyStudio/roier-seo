@@ -49,7 +49,7 @@ Use the fix patterns in this skill to automatically implement SEO improvements i
 
 ## Audit Categories
 
-The audit returns scores (0-100) for five categories:
+The audit returns scores (0-100) for four categories:
 
 | Category | Description | Weight |
 |----------|-------------|--------|
@@ -528,7 +528,7 @@ Run the audit again to verify improvements.
 ## Requirements
 
 This skill requires:
-- **Node.js 18+** installed
+- **Node.js 22.19+** installed (required by Lighthouse 13)
 - **Chrome/Chromium** browser (for Lighthouse)
 - The audit script dependencies (auto-installed on first run)
 
