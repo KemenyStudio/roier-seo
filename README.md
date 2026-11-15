@@ -109,7 +109,7 @@ Once installed, just ask Claude naturally:
 
 ## 🛠️ Requirements
 
-- **Node.js 18+**
+- **Node.js 22.19+** (required by Lighthouse 13)
 - **Chrome/Chromium** (for local Lighthouse audits)
 - **Claude Code** v1.0+
 
