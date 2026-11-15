@@ -18,6 +18,9 @@ import lighthouse from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
 import fs from 'fs';
 import path from 'path';
+import { assertSupportedNode, isInsightAudit } from './runtime.js';
+
+assertSupportedNode();
 
 // ANSI colors for terminal output
 const colors = {
@@ -55,7 +58,7 @@ async function runAudit(url, options = {}) {
   try {
     // Launch Chrome
     chrome = await chromeLauncher.launch({
-      chromeFlags: ['--headless', '--disable-gpu', '--no-sandbox']
+      chromeFlags: ['--headless', '--disable-gpu']
     });
 
     // Run Lighthouse
@@ -63,7 +66,7 @@ async function runAudit(url, options = {}) {
       port: chrome.port,
       output: 'json',
       logLevel: 'error',
-      onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo', 'pwa']
+      onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo']
     });
 
     const { lhr } = result;
@@ -73,8 +76,7 @@ async function runAudit(url, options = {}) {
       performance: Math.round((lhr.categories.performance?.score || 0) * 100),
       accessibility: Math.round((lhr.categories.accessibility?.score || 0) * 100),
       bestPractices: Math.round((lhr.categories['best-practices']?.score || 0) * 100),
-      seo: Math.round((lhr.categories.seo?.score || 0) * 100),
-      pwa: Math.round((lhr.categories.pwa?.score || 0) * 100)
+      seo: Math.round((lhr.categories.seo?.score || 0) * 100)
     };
 
     // Extract failed audits with details
@@ -85,8 +87,9 @@ async function runAudit(url, options = {}) {
       minor: []
     };
 
-    // Process all audits
+    // Process failed category audits. Insight diagnostics are not fixes.
     for (const [auditId, audit] of Object.entries(lhr.audits)) {
+      if (isInsightAudit(auditId, lhr.categories)) continue;
       if (audit.score !== null && audit.score < 1) {
         const issue = {
           id: auditId,
@@ -199,7 +202,6 @@ function printSummary(result) {
   console.log(`  Accessibility:  ${formatScore(result.scores.accessibility / 100)}`);
   console.log(`  Best Practices: ${formatScore(result.scores.bestPractices / 100)}`);
   console.log(`  SEO:            ${formatScore(result.scores.seo / 100)}`);
-  console.log(`  PWA:            ${formatScore(result.scores.pwa / 100)}`);
 
   // Web Vitals
   console.log(`\n${colors.bold}CORE WEB VITALS${colors.reset}`);

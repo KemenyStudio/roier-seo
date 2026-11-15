@@ -6,7 +6,7 @@ description: >
   - Analyze SEO, performance, accessibility, or best practices scores
   - Fix technical SEO issues in their codebase
   - Optimize meta tags, structured data, Core Web Vitals
-  - Improve page speed, accessibility, or PWA compliance
+  - Improve page speed, or accessibility
   Triggers: "audit my site", "check SEO", "fix SEO", "lighthouse", "pagespeed",
   "improve performance", "meta tags", "structured data", "core web vitals"
 ---
@@ -49,7 +49,7 @@ Use the fix patterns in this skill to automatically implement SEO improvements i
 
 ## Audit Categories
 
-The audit returns scores (0-100) for five categories:
+The audit returns scores (0-100) for four categories:
 
 | Category | Description | Weight |
 |----------|-------------|--------|
@@ -57,7 +57,6 @@ The audit returns scores (0-100) for five categories:
 | **Accessibility** | WCAG compliance, screen reader support | High |
 | **Best Practices** | Security, modern web standards | Medium |
 | **SEO** | Search engine optimization, crawlability | High |
-| **PWA** | Progressive Web App compliance | Low |
 
 ---
 
@@ -529,7 +528,7 @@ Run the audit again to verify improvements.
 ## Requirements
 
 This skill requires:
-- **Node.js 18+** installed
+- **Node.js 22.19+** installed (required by Lighthouse 13)
 - **Chrome/Chromium** browser (for Lighthouse)
 - The audit script dependencies (auto-installed on first run)
 

@@ -18,10 +18,14 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-# Check Node version
-NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-if [ "$NODE_VERSION" -lt 18 ]; then
-    echo "⚠️  Warning: Node.js 18+ is recommended. You have v$(node -v)"
+# Lighthouse 13 requires Node.js 22.19+. Same floor as package.json engines.
+NODE_RAW="$(node -v)"
+NODE_RAW="${NODE_RAW#v}"
+IFS=. read -r NODE_MAJOR NODE_MINOR _ <<<"$NODE_RAW"
+if [ "$NODE_MAJOR" -lt 22 ] || { [ "$NODE_MAJOR" -eq 22 ] && [ "$NODE_MINOR" -lt 19 ]; }; then
+    echo "❌ Node.js 22.19 or higher is required (Lighthouse 13). You have v${NODE_RAW}."
+    echo "   Install it from: https://nodejs.org"
+    exit 1
 fi
 
 # Install npm dependencies

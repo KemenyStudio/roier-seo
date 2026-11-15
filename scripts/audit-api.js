@@ -12,16 +12,12 @@
  * Note: Without an API key, you're limited to ~5 requests/minute.
  * Get a free API key at: https://developers.google.com/speed/docs/insights/v5/get-started
  *
- * Requirements: Node.js 18+ (uses native fetch)
+ * Requirements: Node.js 22.19+ (same floor as the local Lighthouse script)
  */
 
-// Check Node.js version - native fetch requires Node 18+
-const nodeVersion = parseInt(process.versions.node.split('.')[0], 10);
-if (nodeVersion < 18) {
-  console.error('Error: This script requires Node.js 18 or higher (for native fetch support).');
-  console.error(`Current version: ${process.versions.node}`);
-  process.exit(1);
-}
+import { assertSupportedNode, isInsightAudit } from './runtime.js';
+
+assertSupportedNode();
 
 const API_URL = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
 
@@ -38,7 +34,7 @@ const colors = {
 async function runAudit(url, apiKey = null) {
   console.error(`${colors.cyan}🔍 Running PageSpeed Insights audit for: ${url}${colors.reset}\n`);
 
-  const categories = ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'];
+  const categories = ['performance', 'accessibility', 'best-practices', 'seo'];
   const params = new URLSearchParams({
     url,
     strategy: 'mobile',
@@ -69,8 +65,7 @@ async function runAudit(url, apiKey = null) {
       performance: Math.round((lhr.categories.performance?.score || 0) * 100),
       accessibility: Math.round((lhr.categories.accessibility?.score || 0) * 100),
       bestPractices: Math.round((lhr.categories['best-practices']?.score || 0) * 100),
-      seo: Math.round((lhr.categories.seo?.score || 0) * 100),
-      pwa: Math.round((lhr.categories.pwa?.score || 0) * 100)
+      seo: Math.round((lhr.categories.seo?.score || 0) * 100)
     };
 
     // Extract failed audits
@@ -82,6 +77,7 @@ async function runAudit(url, apiKey = null) {
     };
 
     for (const [auditId, audit] of Object.entries(lhr.audits)) {
+      if (isInsightAudit(auditId, lhr.categories)) continue;
       if (audit.score !== null && audit.score < 1) {
         const issue = {
           id: auditId,

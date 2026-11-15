@@ -109,7 +109,7 @@ Once installed, just ask Claude naturally:
 
 ## 🛠️ Requirements
 
-- **Node.js 18+**
+- **Node.js 22.19+** (required by Lighthouse 13)
 - **Chrome/Chromium** (for local Lighthouse audits)
 - **Claude Code** v1.0+
 
@@ -176,8 +176,7 @@ node scripts/audit-api.js https://example.com --key=YOUR_API_KEY
     "performance": 85,
     "accessibility": 92,
     "bestPractices": 100,
-    "seo": 88,
-    "pwa": 30
+    "seo": 88
   },
   "webVitals": {
     "FCP": 1200,
